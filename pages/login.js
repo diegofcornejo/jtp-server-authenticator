@@ -6,6 +6,7 @@ const Login = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [token, setToken] = useState('');
+    const [nick, setNick] = useState('');
 	const [error, setError] = useState('');
 
     const cleanUp = () => {
@@ -26,12 +27,14 @@ const Login = () => {
         // cleanUp();
 
 		if (res.status === 200) {
-			const { token } = await res.json();
+			const { token, nick } = await res.json();
 			setToken(token);
+            setNick(nick);
 			setError('');
 		} else {
 			setError('Invalid credentials');
 			setToken('');
+            setNick('');
 		}
 	};
 
@@ -104,7 +107,7 @@ const Login = () => {
 						{error && <p className="text-sm font-light text-red-500 dark:text-red-400">{error}</p>}
 						{token && (
 							<>
-								<p className="text-sm text-green-500">Logged in successfully!</p>
+								<p className="text-sm text-green-500">Welcome {nick}!</p>
 								<p className="text-lg text-green-500 break-all">{token}</p>
 							</>
 						)}

@@ -9,13 +9,12 @@ const handler = async (req, res) => {
         const { username, password } = req.body;
         try {
             await client.connect();
-            const storedPassword = await client.hGet(`user:${username}`, 'password');
+            const [storedPassword, nick] = await client.hmGet(`user:${username}`, ['password', 'nick']);
             if (storedPassword && password === storedPassword) {
-                console.log(process.env.JWT_SECRET)
-                const token = jwt.sign({ user: username }, process.env.JWT_SECRET, { expiresIn: '24h', issuer: 'jtp-server-authenticator' });
+                const token = jwt.sign({ username, nick }, process.env.JWT_SECRET, { expiresIn: '24h', issuer: 'jtp-server-authenticator' });
                 await client.hSet(`user:${username}`, 'token', token);
                 await client.quit();
-                res.status(200).json({ token });
+                res.status(200).json({ token, nick });
             } else {
                 await client.quit();
                 res.status(401).json({ error: 'Invalid credentials' });
