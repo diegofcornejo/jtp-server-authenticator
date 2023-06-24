@@ -1,6 +1,9 @@
 import '../app/globals.css';
 import { useState } from 'react';
 import Image from 'next/image'
+// import ConfettiComponent from '../components/ConfettiComponent';
+import ConfettiExplosion from 'confetti-explosion-react';
+
 
 const Login = () => {
 	const [username, setUsername] = useState('');
@@ -8,6 +11,7 @@ const Login = () => {
 	const [token, setToken] = useState('');
     const [nick, setNick] = useState('');
 	const [error, setError] = useState('');
+    const [isExploding, setIsExploding] = useState(false);
 
     const cleanUp = () => {
         setUsername('');
@@ -31,6 +35,7 @@ const Login = () => {
 			setToken(token);
             setNick(nick);
 			setError('');
+            setIsExploding(true);
 		} else {
 			setError('Invalid credentials');
 			setToken('');
@@ -54,6 +59,7 @@ const Login = () => {
 					/>
 					JTP Server Authenticator
 				</a>
+                {isExploding && <ConfettiExplosion flex items-center/>}
 				<div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
 					<div className="p-6 space-y-4 md:space-y-6 sm:p-8">
 						<h1 className="text-sm font-bold leading-tight tracking-tight text-gray-900 md:text-2sm dark:text-white">
@@ -108,7 +114,8 @@ const Login = () => {
 						{token && (
 							<>
 								<p className="text-sm text-green-500">Welcome {nick}!</p>
-								<p className="text-lg text-green-500 break-all">{token}</p>
+								<p className="text-lg break-all">{token}</p>
+                                {/* <ConfettiComponent /> */}
 							</>
 						)}
 					</div>
