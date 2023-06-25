@@ -13,6 +13,7 @@ const Login = () => {
 	const [error, setError] = useState('');
 	const [isExploding, setIsExploding] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
+    const [isTokenCopied, setIsTokenCopied] = useState(false);
 
 	const handleMouseMove = (e) => {
         const cursorLight = document.getElementById('cursor-light');
@@ -52,6 +53,11 @@ const Login = () => {
 
 		setIsLoading(false);
 	};
+
+    const handleCopyToken = () => {
+        navigator.clipboard.writeText(token);
+        setIsTokenCopied(true);
+    };
 
 	return (
 		<section className="bg-gray-50 dark:bg-gray-900">
@@ -139,6 +145,12 @@ const Login = () => {
 							<>
 								<p className="text-sm text-green-500">Welcome {nick}!</p>
 								<p className="text-lg break-all">{token}</p>
+                                <button
+                                    className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center mt-4 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+                                    onClick={handleCopyToken}
+                                    >
+                                    {isTokenCopied ? 'Token Copied!' : 'Copy Token'}
+                                </button>
 							</>
 						)}
 					</div>
