@@ -29,3 +29,18 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.cursor-light {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: rgba(255, 255, 255, 0.3);
+    filter: blur(50px);
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease-out;
+    z-index: 9999;
+  }

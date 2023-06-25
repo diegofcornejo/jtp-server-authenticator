@@ -1,5 +1,5 @@
 import '../app/globals.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { css } from '@emotion/react';
 import { ClipLoader } from 'react-spinners';
 import Image from 'next/image';
@@ -14,10 +14,17 @@ const Login = () => {
 	const [isExploding, setIsExploding] = useState(false);
 	const [isLoading, setIsLoading] = useState(false);
 
-	const cleanUp = () => {
-		setUsername('');
-		setPassword('');
-	};
+	const handleMouseMove = (e) => {
+        const cursorLight = document.getElementById('cursor-light');
+        cursorLight.style.transform = `translate(${e.clientX}px, ${e.clientY}px)`;
+      };
+      
+      useEffect(() => {
+        window.addEventListener('mousemove', handleMouseMove);
+        return () => {
+          window.removeEventListener('mousemove', handleMouseMove);
+        };
+      }, []);
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -137,6 +144,7 @@ const Login = () => {
 					</div>
 				</div>
 			</div>
+            <div id="cursor-light" className="cursor-light"></div>
 		</section>
 	);
 };
