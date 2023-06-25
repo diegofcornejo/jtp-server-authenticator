@@ -1,24 +1,27 @@
 import '../app/globals.css';
 import { useState } from 'react';
-import Image from 'next/image'
-// import ConfettiComponent from '../components/ConfettiComponent';
+import { css } from '@emotion/react';
+import { ClipLoader } from 'react-spinners';
+import Image from 'next/image';
 import ConfettiExplosion from 'confetti-explosion-react';
-
 
 const Login = () => {
 	const [username, setUsername] = useState('');
 	const [password, setPassword] = useState('');
 	const [token, setToken] = useState('');
-    const [nick, setNick] = useState('');
+	const [nick, setNick] = useState('');
 	const [error, setError] = useState('');
-    const [isExploding, setIsExploding] = useState(false);
+	const [isExploding, setIsExploding] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
 
-    const cleanUp = () => {
-        setUsername('');
-        setPassword('');
-    };
+	const cleanUp = () => {
+		setUsername('');
+		setPassword('');
+	};
+
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+		setIsLoading(true);
 
 		const res = await fetch('/api/auth', {
 			method: 'POST',
@@ -28,19 +31,19 @@ const Login = () => {
 			body: JSON.stringify({ username, password }),
 		});
 
-        // cleanUp();
-
 		if (res.status === 200) {
 			const { token, nick } = await res.json();
 			setToken(token);
-            setNick(nick);
+			setNick(nick);
 			setError('');
-            setIsExploding(true);
+			setIsExploding(true);
 		} else {
 			setError('Invalid credentials');
 			setToken('');
-            setNick('');
+			setNick('');
 		}
+
+		setIsLoading(false);
 	};
 
 	return (
@@ -59,7 +62,7 @@ const Login = () => {
 					/>
 					JTP Server Authenticator
 				</a>
-                {isExploding && <ConfettiExplosion flex items-center/>}
+				{isExploding && <ConfettiExplosion flex items-center />}
 				<div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
 					<div className="p-6 space-y-4 md:space-y-6 sm:p-8">
 						<h1 className="text-sm font-bold leading-tight tracking-tight text-gray-900 md:text-2sm dark:text-white">
@@ -106,25 +109,35 @@ const Login = () => {
 							<button
 								type="submit"
 								className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
+								disabled={isLoading}
 							>
-								Sign in
+								{isLoading ? (
+									<ClipLoader
+										color="#ffffff"
+										loading={true}
+										css={css`
+											display: block;
+											margin: 0 auto;
+										`}
+									/>
+								) : (
+									'Sign in'
+								)}
 							</button>
 						</form>
-						{error && <p className="text-sm font-light text-red-500 dark:text-red-400">{error}</p>}
+						{error && (
+							<p className="text-sm font-light text-red-500 dark:text-red-400">{error}</p>
+						)}
 						{token && (
 							<>
 								<p className="text-sm text-green-500">Welcome {nick}!</p>
 								<p className="text-lg break-all">{token}</p>
-                                {/* <ConfettiComponent /> */}
 							</>
 						)}
 					</div>
 				</div>
 			</div>
 		</section>
-
-
-
 	);
 };
 
